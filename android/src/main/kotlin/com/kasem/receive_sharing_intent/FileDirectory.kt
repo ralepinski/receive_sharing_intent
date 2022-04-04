@@ -98,10 +98,14 @@ object FileDirectory {
             try {
                 cursor = context.contentResolver.query(uri, projection, selection, selectionArgs, null)
                 if (cursor != null && cursor.moveToFirst()) {
-                    val columnIndex = cursor.getColumnIndexOrThrow(column)
-                    val fileName = cursor.getString(columnIndex)
-                    Log.i("FileDirectory", "File name: $fileName")
-                    targetFile = File(context.cacheDir, fileName)
+                    val columnIndex = cursor.getColumnIndex(column)
+                    if (columnIndex != -1) {
+                        val fileName = cursor.getString(columnIndex)
+                        if (fileName != null) {
+                            Log.i("FileDirectory", "File name: $fileName")
+                            targetFile = File(context.cacheDir, fileName)
+                        }
+                    }
                 }
             } finally {
                 cursor?.close()
